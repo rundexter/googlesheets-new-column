@@ -4,23 +4,33 @@
 {
     //Required. Inputs the module expects.
     "inputs": [
-        //e.g.
-        /*
         {
-            "id": "from",
-            "title":"From"
+            "id": "worksheet",
+            "title":"Worksheet ID (default 1)"
+        },
+        {
+            "id": "numColumns",
+            "title":"Count Columns"
         }
-        */
     ],
     //Required. Outputs the module emits.
     "outputs": [
-      //e.g.
-      /*
         {
-            "id": "from",
-            "title":"From"
+            "id": "title",
+            "title":"Sheet Title",
+            "type":"string"
+        },
+        {
+            "id": "rowCount",
+            "title":"Row Count",
+            "type":"integer"
+        },
+        {
+            "id": "colCount",
+            "title":"Column Count",
+            "type":"integer"
         }
-      */
     ],
+    "icon": "fa-google",
     "title": "Google Sheets New Column" /* Required.A display name for the module */
 }
