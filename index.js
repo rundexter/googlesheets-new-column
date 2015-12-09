@@ -47,7 +47,7 @@ module.exports = {
                     } else {
 
                         spreadsheet.metadata({
-                            colCount: metadata.colCount + numColumns
+                            colCount: _.parseInt(metadata.colCount) + _.parseInt(numColumns)
                         }, function(err, metadata){
 
                             if(err)
