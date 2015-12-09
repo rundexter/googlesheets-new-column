@@ -31,6 +31,6 @@
             "type":"integer"
         }
     ],
-    "icon": "fa-google",
+    "icon": "google",
     "title": "Google Sheets New Column" /* Required.A display name for the module */
 }
