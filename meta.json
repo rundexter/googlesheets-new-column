@@ -22,13 +22,11 @@
         },
         {
             "id": "rowCount",
-            "title":"Row Count",
-            "type":"integer"
+            "title":"Row Count"
         },
         {
             "id": "colCount",
-            "title":"Column Count",
-            "type":"integer"
+            "title":"Column Count"
         }
     ],
     "icon": "google",
