@@ -4,10 +4,10 @@ var _ = require('lodash'),
 module.exports = {
     checkAuthOptions: function (step, dexter) {
 
-        if(!dexter.environment('google_access_token') || !dexter.environment('google_spreadsheet')) {
+        if(!dexter.environment('google_spreadsheet'))
+            return 'A [google_access_token, google_spreadsheet] environment variable is required for this module';
 
-            this.fail('A [google_access_token, google_spreadsheet] environment variable is required for this module');
-        }
+        return false;
     },
 
     /**
@@ -17,48 +17,31 @@ module.exports = {
      * @param {AppData} dexter Container for all data used in this workflow.
      */
     run: function(step, dexter) {
-
-        var spreadsheetId = dexter.environment('google_spreadsheet');
-
-
-        var worksheetId = step.input('worksheet', 1).first(),
+        var credentials = dexter.provider('google').credentials(),
+            error = this.checkAuthOptions(step, dexter);
+        var spreadsheetId = dexter.environment('google_spreadsheet'),
+            worksheetId = step.input('worksheet', 1).first(),
             numColumns = step.input('numColumns', 1).first();
 
-        this.checkAuthOptions(step, dexter);
+        if (error) return this.fail(error);
 
         Spreadsheet.load({
             spreadsheetId: spreadsheetId,
             worksheetId: worksheetId,
             accessToken: {
                 type: 'Bearer',
-                token: dexter.environment('google_access_token')
+                token: _.get(credentials, 'access_token')
             }
         }, function (err, spreadsheet) {
-
-            if (err) {
-
-                this.fail(err);
-            } else {
-
-                spreadsheet.metadata(function(err, metadata){
-                    if(err) {
-
-                        this.fail(err);
-                    } else {
-
-                        spreadsheet.metadata({
-                            colCount: _.parseInt(metadata.colCount) + _.parseInt(numColumns)
-                        }, function(err, metadata){
-
-                            if(err)
-                                this.fail(err);
-                            else
-                                this.complete(metadata);
-                        }.bind(this));
-                    }
-                }.bind(this));
-            }
-
+            err? this.fail(err) : spreadsheet.metadata(function(error, metadata){
+                error ? this.fail(error) : spreadsheet.metadata(
+                    {
+                        colCount: _.parseInt(metadata.colCount) + _.parseInt(numColumns)
+                    },
+                    function (err, metadata) {
+                        err? this.fail(err) : this.complete(metadata);
+                    }.bind(this));
+            }.bind(this));
         }.bind(this))
     }
 };
